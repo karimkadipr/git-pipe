@@ -15,11 +15,11 @@ INITIAL_PWD=$PWD
 SCRIPT_DIR=$(dirname "$0")
 
 # _________ Default to current directory. If no our repo local path was set _________
-printf "Setting OUr repo local directory ....\n"
+printf "Setting Our repo local directory ....\n\n"
 if [ -z $OUR_REPO_LOCAL_PATH ]
     then
-        echo "No 'our repo local path' was configured in this script !"
-        echo  "Defaulting to script location directoy (Directory in file system)"
+        printf "No 'our repo local path' was configured in this script !\n\n"
+        printf  "Defaulting to script location directoy (Directory in file system)\n\n"
         if [ -d "$SCRIPT_DIR/.git" ]
             then
                 echo ".git found > selecting the script current directory"
@@ -32,8 +32,10 @@ if [ -z $OUR_REPO_LOCAL_PATH ]
         fi
 fi
 
+echo "Our repo local director: $OUR_REPO_LOCAL_PATH"
+
 # ________________________ Check if client repo remote is set _______________________
-echo "Check if client repo remote url is set and valid ..."
+printf "\n\nCheck if client repo remote url is set and valid ...\n>>>\n"
 cd $OUR_REPO_LOCAL_PATH
 if [ $(git remote get-url $CLIENT_REPO_REMOTE_NAME) = "$CLIENT_REPO" ] 
     then
@@ -46,8 +48,10 @@ if [ $(git remote get-url $CLIENT_REPO_REMOTE_NAME) = "$CLIENT_REPO" ]
         fi
 fi
 
+
+
 # ________________________ Set our repo branch to push (Dev PR branch) _______________________
-printf "Set our repo branch to push (Dev PR branch)\n>>>\n"
+printf "\n\nSet our repo branch to push (Dev PR branch)\n>>>\n"
 
 if [ -z $PR_BRANCH_TO_PUSH ]
     then
