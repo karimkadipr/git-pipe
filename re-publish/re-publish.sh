@@ -8,7 +8,7 @@ CLIENT_REPO_TARGET_BRANCH=master
 # _______ Our Repo
 OUR_REPO=https://git-codecommit.us-east-1.amazonaws.com/v1/repos/testCopy
 OUR_REPO_REMOTE_NAME=origin
-OUR_REPO_LOCAL_PATH=/Users/user203328/Documents/GitHub/TestBranchingCopy
+OUR_REPO_LOCAL_PATH=
 PR_BRANCH_TO_PUSH=test
 
 INITIAL_PWD=$PWD
