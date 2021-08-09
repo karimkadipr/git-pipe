@@ -9,7 +9,7 @@ CLIENT_REPO_TARGET_BRANCH=master
 OUR_REPO=https://git-codecommit.us-east-1.amazonaws.com/v1/repos/testCopy
 OUR_REPO_REMOTE_NAME=origin
 OUR_REPO_LOCAL_PATH=
-PR_BRANCH_TO_PUSH=test
+PR_BRANCH_TO_PUSH=
 
 INITIAL_PWD=$PWD
 SCRIPT_DIR=$(dirname "$0")
@@ -37,13 +37,22 @@ echo "Our repo local director: $OUR_REPO_LOCAL_PATH"
 # ________________________ Check if client repo remote is set _______________________
 printf "\n\nCheck if client repo remote url is set and valid ...\n>>>\n"
 cd $OUR_REPO_LOCAL_PATH
-if [ $(git remote get-url $CLIENT_REPO_REMOTE_NAME) = "$CLIENT_REPO" ] 
+
+
+CLIENT_REMOTE_GET_URL=$(git remote get-url $CLIENT_REPO_REMOTE_NAME 2>&1)
+
+echo $CLIENT_REMOTE_GET_URL
+if [[ $CLIENT_REMOTE_GET_URL == *"No such remote"* ]]
     then
-        echo "setting remote ($CLIENT_REPO_REMOTE_NAME) url to $CLIENT_REPO" 
-        if [[ $(git remote get-url $CLIENT_REPO_REMOTE_NAME) == *"No such remote"* ]] 
-            then # if include 'No such remote' (no remote)
-                git remote add $CLIENT_REPO_REMOTE_NAME $CLIENT_REPO 
+        echo "Remote not found. > creating it >"
+        echo "Setting remote ($CLIENT_REPO_REMOTE_NAME) url to $CLIENT_REPO" 
+        git remote add $CLIENT_REPO_REMOTE_NAME $CLIENT_REPO
+    else
+        if [ "$CLIENT_REMOTE_GET_URL" = "$CLIENT_REPO" ] 
+            then
+                printf "Already set.\n"
             else
+                printf "Exist. But different > resetting >\n"
                 git remote set-url $CLIENT_REPO_REMOTE_NAME $CLIENT_REPO 
         fi
 fi
