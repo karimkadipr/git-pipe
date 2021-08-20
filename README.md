@@ -26,6 +26,5 @@ Retrn the long hash for each commit is between 2 given commit
 
 
 ### TODO
-- check for when a file is deleted
 - And commiting on the other repo and pushing
 

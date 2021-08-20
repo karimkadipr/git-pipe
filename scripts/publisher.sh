@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 
 # arguments
 since_commit="${1}"
