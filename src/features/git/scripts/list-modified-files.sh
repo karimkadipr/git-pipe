@@ -18,7 +18,7 @@ filter="${3}"
 # No arguments provided
 if [[ $# -eq 0 ]]; then
     git diff --name-status
-    exit 1
+    exit 0
 fi
 
 # check filter argument
@@ -28,4 +28,4 @@ else
     git diff --name-status --diff-filter=${filter:-*} ${first_commit_hash}...${second_commit_hash:-HEAD}
 fi
 
-exit 1
+exit 0
