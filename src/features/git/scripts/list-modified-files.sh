@@ -1,8 +1,9 @@
 # arguments
-first_commit_hash=${1}
-second_commit_hash=${2}
+git_dir="${1}"
+first_commit_hash=${2}
+second_commit_hash=${3}
 
-filter="${3}"
+filter="${4}"
 ### filter possible values list
 
 # A Added
@@ -17,15 +18,15 @@ filter="${3}"
 
 # No arguments provided
 if [[ $# -eq 0 ]]; then
-    git diff --name-status
+    git --git-dir=${git_dir:-./.git} diff --name-status
     exit 0
 fi
 
 # check filter argument
 if [ -z ${filter} ]; then
-    git diff --name-status ${first_commit_hash}...${second_commit_hash:-HEAD}
+    git --git-dir=${git_dir} diff --name-status ${first_commit_hash}...${second_commit_hash:-HEAD}
 else
-    git diff --name-status --diff-filter=${filter:-*} ${first_commit_hash}...${second_commit_hash:-HEAD}
+    git --git-dir=${git_dir} diff --name-status --diff-filter=${filter:-*} ${first_commit_hash}...${second_commit_hash:-HEAD}
 fi
 
 exit 0

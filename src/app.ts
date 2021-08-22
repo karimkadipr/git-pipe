@@ -7,6 +7,7 @@ import cors from 'cors';
 import initRoutes from './init/init.routes';
 import errorHandler from './middlewares/errorHandler';
 
+
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));

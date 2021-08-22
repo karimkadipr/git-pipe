@@ -30,7 +30,7 @@ export const cat = (fromFile: string, intoFile: string): ShellResponse => {
 }
 
 export const cp = (opt: '-f' | '-n' | '-u' | '-r' | '-L' | '-P' | '', filesPaths: Array<string>): ShellResponse => {
-    const { code, stdout, stderr } = shell.rm(opt, filesPaths)
+    const { code, stdout, stderr } = opt !== '' ?  shell.rm(opt, filesPaths) : shell.rm(filesPaths)
 
     return {
         code, stdout, stderr
@@ -38,7 +38,7 @@ export const cp = (opt: '-f' | '-n' | '-u' | '-r' | '-L' | '-P' | '', filesPaths
 }
 
 export const rm = (opt: '-r' | '-f' | '-rf' | '', filesPaths: Array<string>): ShellResponse => {
-    const { code, stdout, stderr } = shell.rm(opt, filesPaths)
+    const { code, stdout, stderr } = opt !== '' ? shell.rm(opt, filesPaths) : shell.rm(filesPaths)
 
     return {
         code, stdout, stderr
@@ -54,8 +54,16 @@ export const mv = (filesPaths: Array<string>, dir: string): ShellResponse => {
     }
 }
 
+export const mv_dir = (from: string, to: string): ShellResponse => {
+    const { code, stdout, stderr } = shell.mv(from, to)
+
+    return {
+        code, stdout, stderr
+    }
+}
+
 export const mkdir = (opt: '-p' | '', filesPaths: Array<string>): ShellResponse => {
-    const { code, stdout, stderr } = shell.mkdir(opt, filesPaths)
+    const { code, stdout, stderr } = opt !== '' ? shell.mkdir(opt, filesPaths) : shell.mkdir(filesPaths)
 
     return {
         code, stdout, stderr
@@ -63,15 +71,15 @@ export const mkdir = (opt: '-p' | '', filesPaths: Array<string>): ShellResponse 
 }
 
 export const ls = (opt: '-A' | '-L' | '-d' | '-l' | '', filesPaths: Array<string>): ShellResponse => {
-    const { code, stdout, stderr } = shell.mkdir(opt, filesPaths)
+    const { code, stdout, stderr } = opt !== '' ? shell.ls(opt, filesPaths) : shell.ls(filesPaths)
 
     return {
         code, stdout, stderr
     }
 }
 
-export const grep = (opt: '-v' | '-l' | '-i' | '', filesPaths: Array<string>): ShellResponse => {
-    const { code, stdout, stderr } = shell.mkdir(opt, filesPaths)
+export const grep = (regExpres: string, filesPaths: Array<string>): ShellResponse => {
+    const { code, stdout, stderr } = shell.grep(regExpres, filesPaths)
 
     return {
         code, stdout, stderr
@@ -84,6 +92,7 @@ export default {
     cp,
     rm,
     mv,
+    mv_dir,
     mkdir,
     ls,
     grep,
