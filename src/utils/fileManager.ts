@@ -1,7 +1,7 @@
 import path from 'path';
 import shell from "./shelljs"
 
-const rootDir = path.resolve(__dirname);
+const rootDir = path.resolve(require?.main?.filename || "", '..');
 
 export const emptyDir = (dirPath: string): boolean => {
 
@@ -71,11 +71,12 @@ export const overwriteFolderContent = (fromDir: string, intoDir: string): boolea
   const fromPath_Root = path.join(rootDir, fromDir)
   const toPath_Root = path.join(rootDir, intoDir)
 
-  const deleted = deleteDir(intoDir)
+  const deleted = deleteDir(fromPath_Root)
+  const { code: createdCode } = shell.mkdir('-p', [toPath_Root])
 
-  if (!deleted) return false
+  if (!deleted || createdCode !== 0) return false
 
-  const { code: mvcode } = shell.mv_dir(fromPath_Root, toPath_Root);
+  const { code: copied } = shell.cp_all_in_dir(fromPath_Root, toPath_Root);
 
-  return mvcode === 0
+  return copied === 0
 };

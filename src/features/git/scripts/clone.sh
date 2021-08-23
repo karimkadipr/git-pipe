@@ -1,9 +1,10 @@
-repos_url="${1}"
-branch_name="${2}"
-repos_name="${3}"
+repos_url=${1}
+repos_name=${2}
+branch_name=${3}
 
 # No arguments provided
 if [[ $# -eq 0 ]]; then
+    echo "No Repository url found"
     exit 1
 fi
 

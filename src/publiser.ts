@@ -1,8 +1,15 @@
 
-import GitService from "./features/git/git.service"
+import GitService, { IRepublishParams } from "./features/git/git.service"
 
-GitService.republish({
-    gitRepos: "git@github.com:ELDJAZAERY/tech-test.git",
-    masterBranch: "test",
-    developBranch: "dev",
-})
+
+export default () => {
+
+    const request: IRepublishParams = {
+        gitRepos: "https://git-codecommit.us-east-1.amazonaws.com/v1/repos/git-republish",
+        masterBranch: "clone-master",
+        developBranch: "develop",
+    }
+
+    GitService.republish(request)
+}
+

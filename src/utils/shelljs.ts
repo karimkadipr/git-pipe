@@ -30,7 +30,15 @@ export const cat = (fromFile: string, intoFile: string): ShellResponse => {
 }
 
 export const cp = (opt: '-f' | '-n' | '-u' | '-r' | '-L' | '-P' | '', filesPaths: Array<string>): ShellResponse => {
-    const { code, stdout, stderr } = opt !== '' ?  shell.rm(opt, filesPaths) : shell.rm(filesPaths)
+    const { code, stdout, stderr } = opt !== '' ? shell.rm(opt, filesPaths) : shell.rm(filesPaths)
+
+    return {
+        code, stdout, stderr
+    }
+}
+
+export const cp_all_in_dir = (from: string, to: string): ShellResponse => {
+    const { code, stdout, stderr } = shell.cp('-R', `${from}/.`, to)
 
     return {
         code, stdout, stderr
@@ -96,4 +104,5 @@ export default {
     mkdir,
     ls,
     grep,
+    cp_all_in_dir
 }
