@@ -18,4 +18,6 @@ fi
 
 echo "git --git-dir=${git_dir} checkout ${commit}"
 
-git --git-dir=${git_dir} checkout ${commit}
+cd ${git_dir}/..
+
+git checkout ${commit}
