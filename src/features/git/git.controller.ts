@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { Controller, HttpStatusEnum } from '../../shared';
+import { overwriteFolderContent } from '../../utils/fileManager';
 import GitService, { IRepublishParams } from './git.service';
 
 class GitController implements Controller {
@@ -13,7 +14,20 @@ class GitController implements Controller {
 
   initializeRoutes(): void {
     this.route.get('/publisher', this.publisher);
+    this.route.get('/test', this.test);
   }
+
+  async test(req: Request, res: Response): Promise<void> {
+
+    overwriteFolderContent(
+      "/Users/admin/dev/Git-republisher/Republiser/temp/republisher-674/develop-543"
+      ,
+      "/Users/admin/dev/Git-republisher/Republiser/temp/republisher-674/master-504"
+    )
+
+    res.status(HttpStatusEnum.SUCCESS).send([" OK ! "]);
+  }
+
 
   async publisher(req: Request, res: Response): Promise<void> {
 
@@ -26,6 +40,7 @@ class GitController implements Controller {
     await GitService.republish(request)
 
     res.status(HttpStatusEnum.SUCCESS).send([" OK ! "]);
+
   }
 }
 

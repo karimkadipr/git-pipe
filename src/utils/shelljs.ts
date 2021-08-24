@@ -37,8 +37,8 @@ export const cp = (opt: '-f' | '-n' | '-u' | '-r' | '-L' | '-P' | '', filesPaths
     }
 }
 
-export const cp_all_in_dir = (from: string, to: string): ShellResponse => {
-    const { code, stdout, stderr } = shell.cp('-R', `${from}/.`, to)
+export const cp_dir = (from: string, to: string): ShellResponse => {
+    const { code, stdout, stderr } = shell.cp('-r', from, to)
 
     return {
         code, stdout, stderr
@@ -104,5 +104,5 @@ export default {
     mkdir,
     ls,
     grep,
-    cp_all_in_dir
+    cp_dir
 }

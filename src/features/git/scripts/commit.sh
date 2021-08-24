@@ -1,9 +1,22 @@
 # arguments
 git_dir=${1}
+description="${2}"
 
-git --git-dir=${git_dir:-./.git} add .
+# No arguments provided
+if [[ $# -eq 0 ]]; then
+    echo "Not a Git Repository"
+    exit 1
+fi
 
-git --git-dir=${git_dir:-./.git} commit -m  " Auto Republished Commit "
 
-git --git-dir=${git_dir:-./.git} push
+if [ -z "${description}" ]; then
+    echo "No description message"
+fi
 
+cd ${git_dir}/..
+
+git add .
+
+git commit -m "${description}"
+
+# git push

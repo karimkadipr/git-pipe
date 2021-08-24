@@ -9,6 +9,7 @@ const scriptsRootPath = path.join(rootDir, "..", "/scripts")
 
 const appDir = path.dirname(require?.main?.filename || "");
 
+
 export const gitClone = async (repoUrl: string, branchName: string, repoName: string): Promise<boolean> => {
 
     const { code, stderr } = await exec(`${scriptsRootPath}/clone.sh`, [repoUrl, repoName, branchName])
@@ -38,8 +39,6 @@ export const listCommit = async (repoName: string, sinceCommit: string, toCommit
 
     stderr && console.error(" stderr ====> ", stderr)
 
-    console.log({ code, stdout, stderr })
-
     return stdout !== '' ? stdout.split(os.EOL).reverse() : []
 }
 
@@ -55,12 +54,30 @@ export const checkout = async (repoName: string, commit: string): Promise<boolea
     return code === 0
 }
 
+export const description = async (repoName: string, commit: string): Promise<string> => {
 
-export const commit = async (repoName: string): Promise<boolean> => {
+    const { code, stderr, stdout } = await exec(`${scriptsRootPath}/commit-show.sh`, [getGitDir(repoName), commit])
 
-    const { code, stderr } = await exec(`${scriptsRootPath}/commit.sh`, [getGitDir(repoName)])
+    stderr && console.error(" ##### stderr, stdout ====> ", stdout.replace(os.EOL, ''))
 
-    stderr && console.error(" stderr ====> ", stderr)
+    return code === 0 ? stdout.replace(os.EOL, '') : "No Description"
+}
+
+export const commit = async (repoName: string, msg:string): Promise<boolean> => {
+
+    const { code, stderr } = await exec(`${scriptsRootPath}/commit.sh`, [getGitDir(repoName), `"${msg}"`])
+
+    stderr && console.error(" ##### stderr, stdout ====> ", stderr)
+
+    return code === 0
+}
+
+
+export const push = async (repoName: string): Promise<boolean> => {
+
+    const { code, stderr } = await exec(`${scriptsRootPath}/push.sh`, [getGitDir(repoName)])
+
+    stderr && console.error(" ##### stderr, stdout ====> ", stderr)
 
     return code === 0
 }

@@ -1,14 +1,14 @@
 
 import path from 'path';
 import { deleteDir, moveDir, overwriteFolderContent } from '../../utils/fileManager';
-import { getHead, gitClone, listCommit, checkout, commit } from './utils/git.helpers';
+import { getHead, gitClone, listCommit, checkout, commit, push, description } from './utils/git.helpers';
 
-const appDir = path.dirname(require?.main?.filename || "");
+const appDir = path.join(path.dirname(require?.main?.filename || ""), '..')
 
 export interface IRepublishParams {
   gitRepos: string, // URL
-  developBranch: string, // name of the branch to republish theirs commits
-  masterBranch: string // name of branch to commit on
+  developBranch: string, // the name of the branch that we wish to merge its commits to the master branch
+  masterBranch: string // the name of the branch that we wish to merge into
   /**
    * @TODO LATER
    *  RSA key for Authenticate and sign commits
@@ -39,28 +39,25 @@ export default class GitService {
     const masterBranchHEAD = await getHead(masterReposName)
     if (!masterBranchHEAD) return false
 
+    /** Get Develop HEAD  */
+    const developBranchHEAD = await getHead(developReposName)
+    if (!developBranchHEAD) return false
+
     /** Get All new Commits Between HEAD(master) and HEAD(develop)  */
     const listCommits = await listCommit(developReposName, masterBranchHEAD)
 
-    console.log(" ############   ")
-    listCommits.forEach((e: string, index: number) => console.log(`Commit Hash N${index} ==> `, e));
-    console.log(" ############   ")
+    const publiserRoot = path.join(appDir, "temp", container)
 
-    const publiserRoot = path.join(appDir, '..', "temp", container)
+    for (let index in listCommits) {
 
-    for (let commitHash of listCommits) {
+      const commitHash = listCommits[index]
 
-
-      console.log("  ##########  For Loop , checkout #########  ")
-
-      /** Checkout Develop Repo to Current Commit from  HEAD(master) to HEAD(develop) */
+      /** Checkout Develop Repo to Current Commit */
       const checked = await checkout(developReposName, commitHash)
       if (!checked) return false
 
-      console.log("  ##########  For Loop, moveDir #########  ")
-
       /** save .git file into publiser container  */
-      let moved = moveDir(path.join(publiserRoot, masterReposName, '.git'), path.join(publiserRoot, 'saved-master-git'))
+      let moved = moveDir(path.join(appDir, masterReposName, '.git'), path.join(publiserRoot, 'saved-master-git'))
       if (!moved) return false
 
       /** 
@@ -71,39 +68,39 @@ export default class GitService {
        * Copy all file and folders from dev to master
        * 
        * */
-      overwriteFolderContent(path.join(publiserRoot, developReposName), path.join(publiserRoot, masterReposName))
+      overwriteFolderContent(path.join(appDir, developReposName), path.join(appDir, masterReposName))
 
-      console.log("  ##########  For Loop, overwriteFolderContent #########  ")
 
       /** 
        * 
-       * Replace .git file in master repo by his old .git saved-master-git 
+       * At this moment Master repo has the .git copied with others files from the develop repos
+       * so we should restore his old .git file stored in `saved-master-git` in the container
+       *   
+       *    1- Delete .git file in master repos 
        * 
-       * Delete .git file in master repos 
-       * 
-       * Restore saved-master-git to master repos as .git file
+       *    2- Restore saved-master-git to master repos as .git file
        * 
        * */
-      const deleted = deleteDir(path.join(publiserRoot, masterReposName, '.git'))
+      const deleted = deleteDir(path.join(appDir, masterReposName, '.git'))
       if (!deleted) return false;
 
-      console.log("  ##########  For Loop, deleteDir #########  ")
-
-      moved = moveDir(path.join(publiserRoot, 'saved-master-git'), path.join(publiserRoot, masterReposName, '.git'))
+      moved = moveDir(path.join(publiserRoot, 'saved-master-git'), path.join(appDir, masterReposName, '.git'))
       if (!moved) return false
 
-      console.log("  ##########  For Loop, moveDir #########  ")
+      const currentCommitDescription = await description(developReposName, commitHash)
 
       /** @_COMMIT_ */
-      // const commited = await commit(masterReposName)
-      // if (!commited) return false
-
-      console.log("  ##########  For Loop, commited #########  ")
+      const commited = await commit(masterReposName, currentCommitDescription)
+      if (!commited) return false
 
     }
 
-    return true
+    /** Out of the loop  */
 
+    /**  Finally push to master origin */
+    const pushed = await push(masterReposName)
+
+    return pushed
   }
 
 }
