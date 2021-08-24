@@ -2,7 +2,7 @@
 import GitService, { IRepublishParams } from "./features/git/git.service"
 
 
-export default () => {
+export const publisher = () => {
 
     // const args = process.argv.slice(2)
 
@@ -25,3 +25,6 @@ export default () => {
 
     GitService.republish(request)
 }
+
+
+publisher()
