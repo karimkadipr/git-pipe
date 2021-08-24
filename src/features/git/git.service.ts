@@ -43,6 +43,12 @@ export default class GitService {
     const developBranchHEAD = await getHead(developReposName)
     if (!developBranchHEAD) return false
 
+    /** No commits to be republished  */
+    if (masterBranchHEAD === developBranchHEAD) {
+      console.info(" Everything up-to-date  ")
+      return true
+    }
+
     /** Get All new Commits Between HEAD(master) and HEAD(develop)  */
     const listCommits = await listCommit(developReposName, masterBranchHEAD)
 
