@@ -6,8 +6,9 @@ import { getHead, gitClone, listCommit, checkout, commit, push, description } fr
 const appDir = path.join(path.dirname(require?.main?.filename || ""), '..')
 
 export interface IRepublishParams {
-  gitRepos: string, // URL
+  gitDevRepos: string, // URL
   developBranch: string, // the name of the branch that we wish to merge its commits to the master branch
+  gitMasterRepos: string, // URL
   masterBranch: string // the name of the branch that we wish to merge into
   /**
    * @TODO LATER
@@ -18,8 +19,9 @@ export interface IRepublishParams {
 export default class GitService {
 
   static republish = async ({
-    gitRepos,
+    gitDevRepos,
     developBranch,
+    gitMasterRepos,
     masterBranch
   }: IRepublishParams): Promise<boolean> => {
 
@@ -27,12 +29,12 @@ export default class GitService {
 
     /** Clone Master Branch */
     const masterReposName = path.join('temp', container, `master-${Math.floor(Math.random() * 1000)}`)
-    const CloneMasterBranch = await gitClone(gitRepos, masterBranch, masterReposName)
+    const CloneMasterBranch = await gitClone(gitMasterRepos, masterBranch, masterReposName)
     if (!CloneMasterBranch) return false
 
     /** Clone Develop Branch */
     const developReposName = path.join('temp', container, `develop-${Math.floor(Math.random() * 1000)}`)
-    const CloneDevelopBranch = await gitClone(gitRepos, developBranch, developReposName)
+    const CloneDevelopBranch = await gitClone(gitDevRepos, developBranch, developReposName)
     if (!CloneDevelopBranch) return false
 
     /** Get Master HEAD  */
@@ -103,7 +105,7 @@ export default class GitService {
 
     /** Out of the loop  */
 
-    /**  Finally push to master origin */
+    /**  Finally push to gitMaster Repos origin */
     const pushed = await push(masterReposName)
 
     return pushed

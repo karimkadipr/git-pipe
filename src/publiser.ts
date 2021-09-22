@@ -9,15 +9,17 @@ export const publisher = () => {
 
     if (args.length !== 3)
         request = {
-            gitRepos: "https://git-codecommit.us-east-1.amazonaws.com/v1/repos/git-republish",
-            masterBranch: "clone-master",
+            gitDevRepos: "https://git-codecommit.us-east-1.amazonaws.com/v1/repos/git-republish",
             developBranch: "develop",
+            gitMasterRepos: "git@github.com:react-one/git-republisher.git",
+            masterBranch: "clone-master",
         }
     else
         request = {
-            gitRepos: args[0],
-            masterBranch: args[1],
-            developBranch: args[2],
+            gitDevRepos: args[0],
+            developBranch: args[1],
+            gitMasterRepos: args[2],
+            masterBranch: args[3],
         }
 
     GitService.republish(request)
