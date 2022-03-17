@@ -1,11 +1,11 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "environment.d.ts"],
   "compilerOptions": {
     "types": ["node"],
     "moduleResolution": "node",
     "module": "commonjs",
     "lib": ["es6"],
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

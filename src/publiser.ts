@@ -1,9 +1,11 @@
 import { exit } from 'process';
 // import GitService, { IRepublishParams } from './features/git/git.service';
+import * as fs from 'fs';
+
 
 export const publisher = async () => {
   
-  let rawdata: any = require(process.env.TRIGGER_PAYLOAD);
+  let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD);
   let webhook_event = JSON.parse(rawdata);
   // const args = ['', '', '', '']
   // let request: IRepublishParams;
