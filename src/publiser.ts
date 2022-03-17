@@ -5,12 +5,28 @@ import * as path from 'path';
 
 
 export const publisher = async () => {
-  fs.readFile(path.join(__dirname, process.env.TRIGGER_PAYLOAD, 'utf8', (error, data) => {
-    let webhook_event = JSON.parse(data);
-    console.log("🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables", {webhook_event})
+  // try {
+  // fs.readFile(path.join(__dirname, process.env.TRIGGER_PAYLOAD, 'utf8', (error, data) => {
+  //   let webhook_event: string = JSON.parse(data);
+  //   console.log("🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables", {webhook_event})
   
-    exit();
-  })
+  //   exit();
+  // })} catch (error) {
+  //   console.log(error)
+  // }
+
+  try {
+  let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD);
+  
+  let webhook_event = JSON.parse(rawdata);
+  console.log("🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables", {webhook_event})
+
+  exit();
+  //   fs.readFile(path.join(__dirname, process.env.TRIGGER_PAYLOAD, 'utf8', (error, data) => {
+  // })
+} catch (error) {
+    console.log(error)
+  }
   
   // let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD);
   // const args = ['', '', '', '']
