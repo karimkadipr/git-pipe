@@ -19,15 +19,25 @@ You can spicify a range for commits! And they will be commited again as fresh in
  yarn install
 ```
 
+
 ## RUN APP
 
 # For now update src/publisher.ts file , set the repos url, master branch name and develop branch name then 
 
 ```
-    yarn publisher 
+    yarn publisher -- [args]
 
-    npm run publisher
+    npm run publisher -- [args]
 
 ```
+
+## [Args]
+
+    arg0 : gitDevRepos:  ssh of the repository source
+    arg1 : developBranch: name of the branch source
+    
+    arg2 : gitMasterRepos:  ssh of the repository target
+    arg3 : masterBranch:  name of the branch target
+
 
 
