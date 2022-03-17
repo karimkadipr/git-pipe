@@ -1,0 +1,10 @@
+image: node:latest
+
+test_async:
+  before_script:
+    - ls
+    - pwd
+    - echo "This from before_script"
+  script:
+    - ls
+    - echo "This from script"
