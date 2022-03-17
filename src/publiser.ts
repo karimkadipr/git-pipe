@@ -1,7 +1,7 @@
 import { exit } from 'process';
 // import GitService, { IRepublishParams } from './features/git/git.service';
 
-let file = process.env.TRIGGER_PAYLOAD;
+let file: string = process.env.TRIGGER_PAYLOAD;
 import(file).then((data) => {
   publisher(data);
 });
