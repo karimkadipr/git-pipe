@@ -8,6 +8,6 @@ test_async:
   before_script:
     - npm install
     - file "$TRIGGER_PAYLOAD"
-    - echo "TRIGGER_PAYLOAD"=$TRIGGER_PAYLOAD >> ".env"
+    - echo "TRIGGER_PAYLOAD=$TRIGGER_PAYLOAD" >> ".env"
   script:
     - npm run publisher
