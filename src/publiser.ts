@@ -3,10 +3,6 @@ import { exit } from 'process';
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log('🚀 ~ file: publiser.ts ~ line 6 ~ process.env.TRIGGER_PAYLOAD', {
-  TRIGGER_PAYLOAD: process.env.TRIGGER_PAYLOAD,
-  env: process.env,
-});
 let file = process.env.TRIGGER_PAYLOAD || '';
 import(file).then((data) => {
   publisher(data);
@@ -25,7 +21,10 @@ export const publisher = async (data) => {
 
   console.log(
     '🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables',
-    { env: data },
+    {
+      git_ssh_url: `${data.project.git_ssh_url}`,
+      default_branch: `${data.project.default_branch}`,
+    },
   );
   exit();
   // try {
