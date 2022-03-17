@@ -1,5 +1,7 @@
 import { exit } from 'process';
 // import GitService, { IRepublishParams } from './features/git/git.service';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let file: string = process.env.TRIGGER_PAYLOAD;
 import(file).then((data) => {
