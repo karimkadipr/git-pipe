@@ -7,6 +7,5 @@ cache:
 test_async:
   before_script:
     - npm install
-    - cd src/
   script:
-    - node publiser.ts
+    - npm run publisher
