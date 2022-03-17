@@ -3,6 +3,10 @@ import { exit } from 'process';
 import dotenv from 'dotenv';
 dotenv.config();
 
+console.log('🚀 ~ file: publiser.ts ~ line 6 ~ process.env.TRIGGER_PAYLOAD', {
+  TRIGGER_PAYLOAD: process.env.TRIGGER_PAYLOAD,
+  env: process.env,
+});
 let file: string = process.env.TRIGGER_PAYLOAD;
 import(file).then((data) => {
   publisher(data);
