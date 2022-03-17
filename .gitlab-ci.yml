@@ -7,11 +7,11 @@ cache:
 test_async:
   before_script:
     - pwd
-    - ls
+    - ls -a
     - npm install
     - echo "TRIGGER_PAYLOAD=$TRIGGER_PAYLOAD" >> ".env"
   script:
     - pwd
-    - ls
+    - ls -a
     - cat ".env"
     - npm run publisher

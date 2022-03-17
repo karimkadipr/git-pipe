@@ -7,7 +7,7 @@ console.log('🚀 ~ file: publiser.ts ~ line 6 ~ process.env.TRIGGER_PAYLOAD', {
   TRIGGER_PAYLOAD: process.env.TRIGGER_PAYLOAD,
   env: process.env,
 });
-let file: string = process.env.TRIGGER_PAYLOAD;
+let file = process.env.TRIGGER_PAYLOAD || '';
 import(file).then((data) => {
   publisher(data);
 });
@@ -27,6 +27,7 @@ export const publisher = async (data) => {
     '🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables',
     { env: data },
   );
+  exit();
   // try {
   //   let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD, {
   //     encoding: 'utf8',
