@@ -22,7 +22,7 @@ You can spicify a range for commits! And they will be commited again as fresh in
 
 ## RUN APP
 
-# For now update src/publisher.ts file , set the repos url, master branch name and develop branch name then 
+### you can update the defaults args in src/publisher.ts file 
 
 ```
     yarn publisher -- [args]
