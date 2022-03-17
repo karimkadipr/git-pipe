@@ -7,5 +7,6 @@ cache:
 test_async:
   before_script:
     - npm install
+    - cat "$TRIGGER_PAYLOAD"
   script:
     - npm run publisher
