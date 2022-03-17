@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 let file = process.env.TRIGGER_PAYLOAD || '';
-import(file).then((data) => {
+import(file).then((data: any) => {
   publisher(data);
 });
 
