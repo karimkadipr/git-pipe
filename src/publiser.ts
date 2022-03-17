@@ -14,23 +14,27 @@ export const publisher = async () => {
   //   console.log(error)
   // }
 
-  try {
-    let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD, {
-      encoding: 'utf8',
-    });
+  console.log(
+    '🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables',
+    { env: process.env.TRIGGER_PAYLOAD },
+  );
+  // try {
+  //   let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD, {
+  //     encoding: 'utf8',
+  //   });
 
-    let webhook_event = JSON.parse(rawdata);
-    console.log(
-      '🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables',
-      { webhook_event },
-    );
+  //   let webhook_event = JSON.parse(rawdata);
+  //   console.log(
+  //     '🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables',
+  //     { webhook_event },
+  //   );
 
-    exit();
-    //   fs.readFile(path.join(__dirname, process.env.TRIGGER_PAYLOAD, 'utf8', (error, data) => {
-    // })
-  } catch (error) {
-    console.log(error);
-  }
+  //   exit();
+  //   //   fs.readFile(path.join(__dirname, process.env.TRIGGER_PAYLOAD, 'utf8', (error, data) => {
+  //   // })
+  // } catch (error) {
+  //   console.log(error);
+  // }
 
   // let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD);
   // const args = ['', '', '', '']
