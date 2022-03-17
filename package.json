@@ -44,7 +44,7 @@
   },
   "scripts": {
     "start": "nodemon",
-    "publisher": "ts-node src/publiser.ts $*",
+    "publisher": "ts-node src/publiser.ts",
     "start:dev": "nodemon",
     "start:prod": "export NODE_CONFIG_DIR=./src/config && node dist/server.js",
     "build": "tsc",

@@ -1,12 +1,18 @@
 import { exit } from 'process';
 // import GitService, { IRepublishParams } from './features/git/git.service';
 import * as fs from 'fs';
+import * as path from 'path';
 
 
 export const publisher = async () => {
+  fs.readFile(path.join(__dirname, process.env.TRIGGER_PAYLOAD, 'utf8', (error, data) => {
+    let webhook_event = JSON.parse(data);
+    console.log("🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables", {webhook_event})
   
-  let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD);
-  let webhook_event = JSON.parse(rawdata);
+    exit();
+  })
+  
+  // let rawdata = fs.readFileSync(process.env.TRIGGER_PAYLOAD);
   // const args = ['', '', '', '']
   // let request: IRepublishParams;
 
@@ -27,9 +33,9 @@ export const publisher = async () => {
   //   };
 
   // await GitService.republish(request);
-  console.log("🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables", {webhook_event})
+  // console.log("🚀 ~ file: publiser.ts ~ line 25 ~ publisher ~ This means all good from instalattion to variables", {webhook_event})
   
-  exit();
+  // exit();
 };
 
 publisher();
