@@ -66,5 +66,6 @@ export const publisher = async (data) => {
   // exit();
 };
 let file = process.env.TRIGGER_PAYLOAD || '';
-const data = import(file).then((data: any) => data.default);
-publisher(data);
+import(file).then((data: any) => {
+  console.log('🚀 ~ file: publiser.ts ~ line 72 ~ data ~ data', { data });
+});
