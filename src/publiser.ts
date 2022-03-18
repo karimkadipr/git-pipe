@@ -66,5 +66,5 @@ export const publisher = async (data) => {
   // exit();
 };
 let file = process.env.TRIGGER_PAYLOAD || '';
-const data = await import(file).then((data: any) => data.default);
+const data = import(file).then((data: any) => data.default);
 publisher(data);
