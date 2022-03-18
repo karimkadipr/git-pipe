@@ -3,7 +3,7 @@
   "compilerOptions": {
     "types": ["./node_modules/@types"],
     "moduleResolution": "node",
-    "module": "ES2020",
+    "module": "ESNext",
     "lib": ["es6"],
     "noImplicitAny": false,
     "esModuleInterop": true,
