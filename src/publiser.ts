@@ -3,11 +3,6 @@ import { exit } from 'process';
 import dotenv from 'dotenv';
 dotenv.config();
 
-let file = process.env.TRIGGER_PAYLOAD || '';
-import(file).then((data: any) => {
-  publisher(data);
-});
-
 export const publisher = async (data) => {
   // try {
   // fs.readFile(path.join(__dirname, process.env.TRIGGER_PAYLOAD, 'utf8', (error, data) => {
@@ -70,3 +65,6 @@ export const publisher = async (data) => {
 
   // exit();
 };
+let file = process.env.TRIGGER_PAYLOAD || '';
+const data = await import(file).then((data: any) => data.default);
+publisher(data);
