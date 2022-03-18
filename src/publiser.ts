@@ -1,6 +1,7 @@
 import { exit } from 'process';
 // import GitService, { IRepublishParams } from './features/git/git.service';
 import dotenv from 'dotenv';
+import fs from 'fs';
 dotenv.config();
 
 export const publisher = async (data) => {
@@ -66,7 +67,15 @@ export const publisher = async (data) => {
   // exit();
 };
 let file = process.env.TRIGGER_PAYLOAD || '';
-console.log('🚀 ~ file: publiser.ts ~ line 69 ~ file', file);
+let rawdata = fs.readFileSync(file, {
+  encoding: 'utf8',
+});
+
+let webhook_event = JSON.parse(rawdata);
+console.log('🚀 ~ file: publiser.ts ~ line 75 ~ webhook_event', {
+  webhook_event,
+});
+
 // import(file).then((data: any) => {
 //   console.log('🚀 ~ file: publiser.ts ~ line 72 ~ data ~ data', { data });
 // });
