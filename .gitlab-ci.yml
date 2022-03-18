@@ -14,4 +14,4 @@ test_async:
     - pwd
     - ls -a
     - cat ".env"
-    - npm run publisher
+    - npm run publisher -y
