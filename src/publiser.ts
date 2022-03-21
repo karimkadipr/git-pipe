@@ -7,19 +7,12 @@ dotenv.config();
 export const publisher = async (data) => {
   let request: IRepublishParams;
 
-  // if (Object.keys(data.variables).length !== 3)
-  //   request = {
-  //     gitDevRepos: data.project.git_ssh_url,
-  //     developBranch: data.variables.source_branch,
-  //     gitMasterRepos: data.variables.target_git_ssh_url,
-  //     masterBranch: data.variables.target_branch,
-  //   };
-  // else
   request = {
     gitDevRepos: data.project.git_ssh_url,
     developBranch: data.variables.source_branch,
     gitMasterRepos: data.variables.target_git_ssh_url,
     masterBranch: data.variables.target_branch,
+    skip: true,
   };
   console.log('🚀 ~ file: publiser.ts ~ line 19 ~ publisher ~ request', {
     request,

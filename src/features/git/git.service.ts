@@ -24,6 +24,7 @@ export interface IRepublishParams {
   developBranch: string; // the name of the branch that we wish to merge its commits to the master branch
   gitMasterRepos: string; // URL
   masterBranch: string; // the name of the branch that we wish to merge into
+  skip: boolean; // skip command line validartion to run script
   /**
    * @TODO LATER
    *  RSA key for Authenticate and sign commits
@@ -36,6 +37,7 @@ export default class GitService {
     developBranch,
     gitMasterRepos,
     masterBranch,
+    skip,
   }: IRepublishParams): Promise<boolean> => {
     try {
       const container = `republisher-${Math.floor(Math.random() * 1000)}`;
@@ -51,26 +53,32 @@ export default class GitService {
        * confirm the whole process
        *
        */
-      await Confirm(
-        `\n\nYou are in the process of \n1 - cloning ${developBranch} branch from ${gitDevRepos} \n2 - cloning ${masterBranch} branch from ${gitMasterRepos} \n3 - reproduise all ahead commit in ${developBranch} into ${masterBranch} \n\nDo you want to continue ? (yes/no) `,
-        'yes',
-      );
+      if (!skip) {
+        await Confirm(
+          `\n\nYou are in the process of \n1 - cloning ${developBranch} branch from ${gitDevRepos} \n2 - cloning ${masterBranch} branch from ${gitMasterRepos} \n3 - reproduise all ahead commit in ${developBranch} into ${masterBranch} \n\nDo you want to continue ? (yes/no) `,
+          'yes',
+        );
+      }
 
       /**
        * confirm master repos & branch
        */
-      await Confirm(
-        `\n\nDo you wish to clone ${masterBranch} branch from ${gitMasterRepos} ? (yes/no) `,
-        'yes',
-      );
+      if (!skip) {
+        await Confirm(
+          `\n\nDo you wish to clone ${masterBranch} branch from ${gitMasterRepos} ? (yes/no) `,
+          'yes',
+        );
+      }
 
       /**
        * confirm master branch
        */
-      await Confirm(
-        `\n\nAre you sure that ${masterBranch} branch from ${gitMasterRepos} is a clone of your origin master branch ? (yes/no) `,
-        'yes',
-      );
+      if (!skip) {
+        await Confirm(
+          `\n\nAre you sure that ${masterBranch} branch from ${gitMasterRepos} is a clone of your origin master branch ? (yes/no) `,
+          'yes',
+        );
+      }
 
       const CloneMasterBranch = await gitClone(
         gitMasterRepos,
@@ -90,10 +98,12 @@ export default class GitService {
       /**
        * confirm dev repos & branch
        */
-      await Confirm(
-        `\n\nDo you wish to clone ${developBranch} branch from ${gitDevRepos} ? (yes/no) `,
-        'yes',
-      );
+      if (!skip) {
+        await Confirm(
+          `\n\nDo you wish to clone ${developBranch} branch from ${gitDevRepos} ? (yes/no) `,
+          'yes',
+        );
+      }
 
       const CloneDevelopBranch = await gitClone(
         gitDevRepos,
@@ -122,12 +132,14 @@ export default class GitService {
         masterBranchHEAD,
       );
 
-      await Confirm(
-        `\n\nWe are in the process of reproduise this commit : \n${listCommitsWithMsgs.join(
-          '\n',
-        )}\n \n\nDo you want to continue ? (yes/no)`,
-        'yes',
-      );
+      if (!skip) {
+        await Confirm(
+          `\n\nWe are in the process of reproduise this commit : \n${listCommitsWithMsgs.join(
+            '\n',
+          )}\n \n\nDo you want to continue ? (yes/no)`,
+          'yes',
+        );
+      }
 
       /** Get All new Commits Between HEAD(master) and HEAD(develop)  */
       const listCommits = await listCommit(developReposName, masterBranchHEAD);
