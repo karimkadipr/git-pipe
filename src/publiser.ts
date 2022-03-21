@@ -7,10 +7,23 @@ dotenv.config();
 export const publisher = async (data) => {
   let request: IRepublishParams;
 
+  // tmp related to my account .replace("gitlab.com", "gitlab-work")
+  const sourceGitRepo = data.project.git_ssh_url;
+  const targetGitRepo = data.variables.target_git_ssh_url;
+
+  const authorizedSourceGitRepo = sourceGitRepo.replace(
+    'gitlab.com',
+    'gitlab-work',
+  );
+  const authorizedTargetGitRepo = targetGitRepo.replace(
+    'gitlab.com',
+    'gitlab-work',
+  );
+
   request = {
-    gitDevRepos: data.project.git_ssh_url,
+    gitDevRepos: authorizedSourceGitRepo,
     developBranch: data.variables.source_branch,
-    gitMasterRepos: data.variables.target_git_ssh_url,
+    gitMasterRepos: authorizedTargetGitRepo,
     masterBranch: data.variables.target_branch,
     skip: true,
   };
