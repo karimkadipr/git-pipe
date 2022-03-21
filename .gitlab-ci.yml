@@ -7,9 +7,8 @@ test_async:
   before_script:
     - pwd
     - ls -a
-    # - npm install
+    - npm install
     - echo "TRIGGER_PAYLOAD=$TRIGGER_PAYLOAD" >> ".env"
-    - echo "CI_PIPELINE_SOURCE=$CI_PIPELINE_SOURCE" >> ".env"
   script:
     - pwd
     - ls -a

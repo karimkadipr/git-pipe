@@ -25,6 +25,7 @@ export interface IRepublishParams {
   gitMasterRepos: string; // URL
   masterBranch: string; // the name of the branch that we wish to merge into
   skip: boolean; // skip command line validartion to run script
+  allowedToPush: boolean; //allow on PR Approved (merged).
   /**
    * @TODO LATER
    *  RSA key for Authenticate and sign commits
@@ -38,6 +39,7 @@ export default class GitService {
     gitMasterRepos,
     masterBranch,
     skip,
+    allowedToPush,
   }: IRepublishParams): Promise<boolean> => {
     try {
       const container = `republisher-${Math.floor(Math.random() * 1000)}`;
@@ -207,16 +209,20 @@ export default class GitService {
 
       /** Out of the loop  */
 
-      /**  Finally push to gitMaster Repos origin */
-      const pushed = await push(masterReposName);
+      if (allowedToPush) {
+        /**  Finally push to gitMaster Repos origin */
+        const pushed = await push(masterReposName);
+        echo(
+          `\n\n${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
+        );
+        return pushed;
+      }
 
-      return pushed;
+      echo(
+        `\n\n${masterReposName} is up to date with ${developBranch}, only merged PR allowed to push the modification to your origin ${masterReposName}\n`,
+      );
 
-      // echo(
-      //   `\n\n${masterReposName} is up to date with ${developBranch}, in order to push the modficaton to your origin, please navigate to ${masterReposName}\n`,
-      // );
-
-      // return true;
+      return true;
     } catch {
       return false;
     }

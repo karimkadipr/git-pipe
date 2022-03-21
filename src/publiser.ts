@@ -26,13 +26,15 @@ export const publisher = async (data) => {
     gitMasterRepos: authorizedTargetGitRepo,
     masterBranch: data.variables.target_branch,
     skip: true,
-    allowedToPush: false,
+    allowedToPush:
+      data.event_type === 'merge_request' &&
+      data.object_attributes.state === 'merged',
   };
   console.log('🚀 ~ file: publiser.ts ~ line 19 ~ publisher ~ request', {
     request,
   });
 
-  // await GitService.republish(request);
+  await GitService.republish(request);
   exit();
 };
 
