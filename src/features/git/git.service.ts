@@ -208,15 +208,15 @@ export default class GitService {
       /** Out of the loop  */
 
       /**  Finally push to gitMaster Repos origin */
-      // const pushed = await push(masterReposName)
+      const pushed = await push(masterReposName);
 
-      // return pushed
+      return pushed;
 
-      echo(
-        `\n\n${masterReposName} is up to date with ${developBranch}, in order to push the modficaton to your origin, please navigate to ${masterReposName}\n`,
-      );
+      // echo(
+      //   `\n\n${masterReposName} is up to date with ${developBranch}, in order to push the modficaton to your origin, please navigate to ${masterReposName}\n`,
+      // );
 
-      return true;
+      // return true;
     } catch {
       return false;
     }
