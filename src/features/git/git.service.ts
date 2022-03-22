@@ -24,7 +24,6 @@ export interface IRepublishParams {
   developBranch: string; // the name of the branch that we wish to merge its commits to the master branch
   gitMasterRepos: string; // URL
   masterBranch: string; // the name of the branch that we wish to merge into
-  commitToPush: string;
   /**
    * @TODO LATER
    *  RSA key for Authenticate and sign commits
@@ -37,7 +36,6 @@ export default class GitService {
     developBranch,
     gitMasterRepos,
     masterBranch,
-    commitToPush,
   }: IRepublishParams): Promise<boolean> => {
     try {
       const container = `republisher-${Math.floor(Math.random() * 1000)}`;

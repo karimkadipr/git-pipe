@@ -23,16 +23,18 @@ export const publisher = async (data) => {
 
   const allowedToPush =
     data.event_type === 'merge_request' &&
-    data.object_attributes.state === 'opened' &&
-    data.object_attributes.action === 'approved' &&
-    data.user.username === 'Kitani_Islam';
+    data.object_attributes.state === 'opened';
 
+  /**
+     *  &&
+    data.object_attributes.action === 'approved' &&
+    data.user.username === 'Kitani_Islam'
+     */
   request = {
     gitDevRepos: authorizedSourceGitRepo,
     developBranch: data.variables.source_branch,
     gitMasterRepos: authorizedTargetGitRepo,
     masterBranch: data.variables.target_branch,
-    commitToPush: data.object_attributes.merge_commit_sha,
   };
 
   console.log('🚀 ~ file: publiser.ts ~ line 19 ~ publisher ~ request', {
