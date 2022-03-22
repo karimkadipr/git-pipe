@@ -48,7 +48,7 @@ export const getBranchingPoint = async (
   developBranch: string,
 ): Promise<string | undefined> => {
   const { code, stdout, stderr } = await exec(
-    `${scriptsRootPath}/get-head.sh`,
+    `${scriptsRootPath}/get-branching-point.sh`,
     [getGitDir(repoName), baseBranch, developBranch],
   );
 

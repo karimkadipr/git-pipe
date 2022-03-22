@@ -7,4 +7,4 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-git --git-dir=${git_dir} push origin -U 
+git --git-dir=${git_dir} push
