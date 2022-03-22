@@ -18,4 +18,8 @@ if [ -z "${devbranch}" ]; then
     echo "No Dev Branch"
 fi
 
-git --git-dir=${git_dir:-./.git} merge-base ${basebranch} ${devbranch}
+git --git-dir=${git_dir:-./.git} checkout -b develop
+git --git-dir=${git_dir:-./.git} config pull.rebase false
+git --git-dir=${git_dir:-./.git} branch --set-upstream-to=origin/develop develop
+git --git-dir=${git_dir:-./.git} fetch
+git --git-dir=${git_dir:-./.git} merge-base develop main

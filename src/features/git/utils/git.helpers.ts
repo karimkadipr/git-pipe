@@ -11,14 +11,13 @@ const appDir = path.dirname(require?.main?.filename || '');
 
 export const gitClone = async (
   repoUrl: string,
-  branchName: string,
   repoName: string,
+  branchName?: string,
 ): Promise<boolean> => {
-  const { code, stderr } = await exec(`${scriptsRootPath}/clone.sh`, [
-    repoUrl,
-    repoName,
-    branchName,
-  ]);
+  const { code, stderr } = await exec(
+    `${scriptsRootPath}/clone.sh`,
+    branchName ? [repoUrl, repoName, branchName] : [repoUrl, repoName],
+  );
 
   stderr && console.error(' stderr ====> ', stderr);
 
@@ -32,6 +31,7 @@ export const getGitDir = (repoName: string): string => {
 export const getHead = async (
   repoName: string,
 ): Promise<string | undefined> => {
+  console.log('🚀 ~ file: git.helpers.ts ~ line 35 ~ repoName', repoName);
   const { code, stdout, stderr } = await exec(
     `${scriptsRootPath}/get-head.sh`,
     [getGitDir(repoName)],
@@ -47,6 +47,14 @@ export const getBranchingPoint = async (
   baseBranch: string,
   developBranch: string,
 ): Promise<string | undefined> => {
+  // console.log(
+  //   '🚀 ~ file: git.helpers.ts ~ line 51 ~ repoName',
+  //   repoName,
+  //   `git --git-dir=${getGitDir(
+  //     repoName,
+  //   )}: merge-base ${baseBranch} ${developBranch}`,
+  // );
+  // const script = `git --git-dir=${getGitDir(repoName)} merge-base develop main`;
   const { code, stdout, stderr } = await exec(
     `${scriptsRootPath}/get-branching-point.sh`,
     [getGitDir(repoName), baseBranch, developBranch],

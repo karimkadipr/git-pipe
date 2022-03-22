@@ -49,8 +49,8 @@ export default class GitService {
 
       const CloneMasterBranch = await gitClone(
         gitMasterRepos,
-        masterBranch,
         masterReposName,
+        masterBranch,
       );
 
       if (!CloneMasterBranch) return false;
@@ -62,11 +62,7 @@ export default class GitService {
         `develop-${Math.floor(Math.random() * 1000)}`,
       );
 
-      const CloneDevelopBranch = await gitClone(
-        gitDevRepos,
-        developBranch,
-        developReposName,
-      );
+      const CloneDevelopBranch = await gitClone(gitDevRepos, developReposName);
       if (!CloneDevelopBranch) return false;
 
       /** Get Master HEAD  */
@@ -76,6 +72,16 @@ export default class GitService {
         masterBranchHEAD,
       );
       if (!masterBranchHEAD) return false;
+
+      const BranchingPoint = await getBranchingPoint(
+        developReposName,
+        'main',
+        'develop',
+      );
+      console.log(
+        '🚀 ~ file: git.service.ts ~ line 101 ~ GitService ~ BranchingPoint',
+        BranchingPoint,
+      );
 
       /** Get Develop HEAD  */
       const developBranchHEAD = await getHead(developReposName);
@@ -91,16 +97,6 @@ export default class GitService {
         return true;
       }
 
-      const BranchingPoint = await getBranchingPoint(
-        developReposName,
-        'main',
-        developBranch,
-      );
-      console.log(
-        '🚀 ~ file: git.service.ts ~ line 101 ~ GitService ~ BranchingPoint',
-        BranchingPoint,
-      );
-
       /** Get All new Commits Between HEAD(master) and HEAD(develop)  */
       // const listCommitsWithMsgs = await listCommitWithDesc(
       //   developReposName,
@@ -108,86 +104,86 @@ export default class GitService {
       // );
 
       /** Get All new Commits Between HEAD(master) and HEAD(develop)  */
-
+      return true;
       // for (let index in commits) {
-      const listCommits = await listCommit(
-        developReposName,
-        BranchingPoint ?? '',
-      );
-      console.log(
-        '🚀 ~ file: git.service.ts ~ line 116 ~ GitService ~ listCommits',
-        listCommits,
-      );
+      // const listCommits = await listCommit(
+      //   developReposName,
+      //   BranchingPoint ?? '',
+      // );
+      // console.log(
+      //   '🚀 ~ file: git.service.ts ~ line 116 ~ GitService ~ listCommits',
+      //   listCommits,
+      // );
 
-      const publiserRoot = path.join(appDir, 'temp', container);
+      // const publiserRoot = path.join(appDir, 'temp', container);
 
-      for (let index in listCommits) {
-        const commitHash = listCommits[index];
+      // for (let index in listCommits) {
+      //   const commitHash = listCommits[index];
 
-        /** Checkout Develop Repo to Current Commit */
-        const checked = await checkout(developReposName, commitHash);
-        if (!checked) return false;
+      //   /** Checkout Develop Repo to Current Commit */
+      //   const checked = await checkout(developReposName, commitHash);
+      //   if (!checked) return false;
 
-        /** save .git file into publiser container  */
-        let moved = moveDir(
-          path.join(appDir, masterReposName, '.git'),
-          path.join(publiserRoot, 'saved-master-git'),
-        );
-        if (!moved) return false;
+      //   /** save .git file into publiser container  */
+      //   let moved = moveDir(
+      //     path.join(appDir, masterReposName, '.git'),
+      //     path.join(publiserRoot, 'saved-master-git'),
+      //   );
+      //   if (!moved) return false;
 
-        /**
-         * @Over_Write_Folder_Content
-         *
-         * Empty Master Folder
-         *
-         * Copy all file and folders from dev to master
-         *
-         * */
-        overwriteFolderContent(
-          path.join(appDir, developReposName),
-          path.join(appDir, masterReposName),
-        );
+      //   /**
+      //    * @Over_Write_Folder_Content
+      //    *
+      //    * Empty Master Folder
+      //    *
+      //    * Copy all file and folders from dev to master
+      //    *
+      //    * */
+      //   overwriteFolderContent(
+      //     path.join(appDir, developReposName),
+      //     path.join(appDir, masterReposName),
+      //   );
 
-        /**
-         *
-         * At this moment Master repo has the .git copied with others files from the develop repos
-         * so we should restore his old .git file stored in `saved-master-git` in the container
-         *
-         *    1- Delete .git file in master repos
-         *
-         *    2- Restore saved-master-git to master repos as .git file
-         *
-         * */
-        const deleted = deleteDir(path.join(appDir, masterReposName, '.git'));
-        if (!deleted) return false;
+      //   /**
+      //    *
+      //    * At this moment Master repo has the .git copied with others files from the develop repos
+      //    * so we should restore his old .git file stored in `saved-master-git` in the container
+      //    *
+      //    *    1- Delete .git file in master repos
+      //    *
+      //    *    2- Restore saved-master-git to master repos as .git file
+      //    *
+      //    * */
+      //   const deleted = deleteDir(path.join(appDir, masterReposName, '.git'));
+      //   if (!deleted) return false;
 
-        moved = moveDir(
-          path.join(publiserRoot, 'saved-master-git'),
-          path.join(appDir, masterReposName, '.git'),
-        );
-        if (!moved) return false;
+      //   moved = moveDir(
+      //     path.join(publiserRoot, 'saved-master-git'),
+      //     path.join(appDir, masterReposName, '.git'),
+      //   );
+      //   if (!moved) return false;
 
-        const currentCommitDescription = await description(
-          developReposName,
-          commitHash,
-        );
+      //   const currentCommitDescription = await description(
+      //     developReposName,
+      //     commitHash,
+      //   );
 
-        /** @_COMMIT_ */
-        const commited = await commit(
-          masterReposName,
-          currentCommitDescription,
-        );
-        if (!commited) return false;
-        // }
-      }
-      /** Out of the loop  */
+      //   /** @_COMMIT_ */
+      //   const commited = await commit(
+      //     masterReposName,
+      //     currentCommitDescription,
+      //   );
+      //   if (!commited) return false;
+      //   // }
+      // }
+      // /** Out of the loop  */
 
-      /**  Finally push to gitMaster Repos origin */
-      const pushed = await push(masterReposName);
-      echo(
-        `\n\n${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
-      );
-      return pushed;
+      // /**  Finally push to gitMaster Repos origin */
+      // const pushed = await push(masterReposName);
+      // echo(
+      //   `\n\n${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
+      // );
+      // return pushed;
 
       // echo(
       //   `\n\n${masterReposName} is up to date with ${developBranch}, only merged PR allowed to push the modification to your origin ${masterReposName}\n`,
