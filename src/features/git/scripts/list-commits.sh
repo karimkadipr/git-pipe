@@ -12,6 +12,6 @@ fi
 
 # Get only commits full hash
 # git log --pretty=format:"%H"
-git --git-dir=${git_dir:-./.git} log --oneline --pretty=format:"%H" $since_commit..origin/${branch}
+git --git-dir=${git_dir:-./.git} log --oneline --pretty=format:"%H" $since_commit^..origin/${branch}
 
 exit 0
