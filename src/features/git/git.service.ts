@@ -169,7 +169,7 @@ export default class GitService {
 
         const currentCommitDescription = await description(
           developReposName,
-          commitToPush,
+          commitHash,
         );
 
         /** @_COMMIT_ */
