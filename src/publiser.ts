@@ -21,23 +21,22 @@ export const publisher = async (data) => {
     'gitlab-work',
   );
 
-  // const allowedToPush =
-  //   data.event_type === 'merge_request' &&
-  //   data.object_attributes.state === 'merged';
+  const allowedToPush =
+    data.event_type === 'merge_request' &&
+    data.object_attributes.state === 'merged';
 
   request = {
     gitDevRepos: authorizedSourceGitRepo,
     developBranch: data.variables.source_branch,
     gitMasterRepos: authorizedTargetGitRepo,
     masterBranch: data.variables.target_branch,
-    commits: data.commits,
+    commitToPush: data.object_attributes.merge_commit_sha,
   };
   console.log('🚀 ~ file: publiser.ts ~ line 19 ~ publisher ~ request', {
     request,
   });
 
-  // if (allowedToPush)
-  await GitService.republish(request);
+  if (allowedToPush) await GitService.republish(request);
   echo('🚀 ✅ Everything up to date.');
   exit();
 };

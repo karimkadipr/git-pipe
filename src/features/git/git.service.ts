@@ -18,29 +18,12 @@ import {
 } from './utils/git.helpers';
 
 const appDir = path.join(path.dirname(require?.main?.filename || ''), '..');
-
-interface IAuthor {
-  name: string;
-  email: string;
-}
-
-export interface ICommit {
-  id: string;
-  message: string;
-  title: string;
-  timestamp: string;
-  url: string;
-  author: IAuthor;
-  added: string[];
-  modified: string[];
-  removed: string[];
-}
 export interface IRepublishParams {
   gitDevRepos: string; // URL
   developBranch: string; // the name of the branch that we wish to merge its commits to the master branch
   gitMasterRepos: string; // URL
   masterBranch: string; // the name of the branch that we wish to merge into
-  commits: ICommit[];
+  commitToPush: string;
   /**
    * @TODO LATER
    *  RSA key for Authenticate and sign commits
@@ -53,7 +36,7 @@ export default class GitService {
     developBranch,
     gitMasterRepos,
     masterBranch,
-    commits,
+    commitToPush,
   }: IRepublishParams): Promise<boolean> => {
     try {
       const container = `republisher-${Math.floor(Math.random() * 1000)}`;
@@ -89,10 +72,18 @@ export default class GitService {
 
       /** Get Master HEAD  */
       const masterBranchHEAD = await getHead(masterReposName);
+      console.log(
+        '🚀 ~ file: git.service.ts ~ line 75 ~ GitService ~ masterBranchHEAD',
+        masterBranchHEAD,
+      );
       if (!masterBranchHEAD) return false;
 
       /** Get Develop HEAD  */
       const developBranchHEAD = await getHead(developReposName);
+      console.log(
+        '🚀 ~ file: git.service.ts ~ line 80 ~ GitService ~ developBranchHEAD',
+        developBranchHEAD,
+      );
       if (!developBranchHEAD) return false;
 
       /** No commits to be republished  */
@@ -111,64 +102,60 @@ export default class GitService {
 
       const publiserRoot = path.join(appDir, 'temp', container);
 
-      for (let index in commits) {
-        const commitHash = commits[index].id;
+      // for (let index in commits) {
 
-        /** Checkout Develop Repo to Current Commit */
-        const checked = await checkout(developReposName, commitHash);
-        if (!checked) return false;
+      /** Checkout Develop Repo to Current Commit */
+      const checked = await checkout(developReposName, commitToPush);
+      if (!checked) return false;
 
-        /** save .git file into publiser container  */
-        let moved = moveDir(
-          path.join(appDir, masterReposName, '.git'),
-          path.join(publiserRoot, 'saved-master-git'),
-        );
-        if (!moved) return false;
+      /** save .git file into publiser container  */
+      let moved = moveDir(
+        path.join(appDir, masterReposName, '.git'),
+        path.join(publiserRoot, 'saved-master-git'),
+      );
+      if (!moved) return false;
 
-        /**
-         * @Over_Write_Folder_Content
-         *
-         * Empty Master Folder
-         *
-         * Copy all file and folders from dev to master
-         *
-         * */
-        overwriteFolderContent(
-          path.join(appDir, developReposName),
-          path.join(appDir, masterReposName),
-        );
+      /**
+       * @Over_Write_Folder_Content
+       *
+       * Empty Master Folder
+       *
+       * Copy all file and folders from dev to master
+       *
+       * */
+      overwriteFolderContent(
+        path.join(appDir, developReposName),
+        path.join(appDir, masterReposName),
+      );
 
-        /**
-         *
-         * At this moment Master repo has the .git copied with others files from the develop repos
-         * so we should restore his old .git file stored in `saved-master-git` in the container
-         *
-         *    1- Delete .git file in master repos
-         *
-         *    2- Restore saved-master-git to master repos as .git file
-         *
-         * */
-        const deleted = deleteDir(path.join(appDir, masterReposName, '.git'));
-        if (!deleted) return false;
+      /**
+       *
+       * At this moment Master repo has the .git copied with others files from the develop repos
+       * so we should restore his old .git file stored in `saved-master-git` in the container
+       *
+       *    1- Delete .git file in master repos
+       *
+       *    2- Restore saved-master-git to master repos as .git file
+       *
+       * */
+      const deleted = deleteDir(path.join(appDir, masterReposName, '.git'));
+      if (!deleted) return false;
 
-        moved = moveDir(
-          path.join(publiserRoot, 'saved-master-git'),
-          path.join(appDir, masterReposName, '.git'),
-        );
-        if (!moved) return false;
+      moved = moveDir(
+        path.join(publiserRoot, 'saved-master-git'),
+        path.join(appDir, masterReposName, '.git'),
+      );
+      if (!moved) return false;
 
-        const currentCommitDescription = await description(
-          developReposName,
-          commitHash,
-        );
+      const currentCommitDescription = await description(
+        developReposName,
+        commitToPush,
+      );
 
-        /** @_COMMIT_ */
-        const commited = await commit(
-          masterReposName,
-          currentCommitDescription,
-        );
-        if (!commited) return false;
-      }
+      /** @_COMMIT_ */
+      const commited = await commit(masterReposName, currentCommitDescription);
+      if (!commited) return false;
+      // }
 
       /** Out of the loop  */
 
