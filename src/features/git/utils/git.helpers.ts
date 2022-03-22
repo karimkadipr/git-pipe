@@ -30,11 +30,11 @@ export const getGitDir = (repoName: string): string => {
 
 export const getHead = async (
   repoName: string,
+  branchName?: string,
 ): Promise<string | undefined> => {
-  console.log('🚀 ~ file: git.helpers.ts ~ line 35 ~ repoName', repoName);
   const { code, stdout, stderr } = await exec(
     `${scriptsRootPath}/get-head.sh`,
-    [getGitDir(repoName)],
+    branchName ? [getGitDir(repoName), branchName] : [getGitDir(repoName)],
   );
 
   stderr && console.error(' stderr ====> ', stderr);
@@ -47,14 +47,6 @@ export const getBranchingPoint = async (
   baseBranch: string,
   developBranch: string,
 ): Promise<string | undefined> => {
-  // console.log(
-  //   '🚀 ~ file: git.helpers.ts ~ line 51 ~ repoName',
-  //   repoName,
-  //   `git --git-dir=${getGitDir(
-  //     repoName,
-  //   )}: merge-base ${baseBranch} ${developBranch}`,
-  // );
-  // const script = `git --git-dir=${getGitDir(repoName)} merge-base develop main`;
   const { code, stdout, stderr } = await exec(
     `${scriptsRootPath}/get-branching-point.sh`,
     [getGitDir(repoName), baseBranch, developBranch],
@@ -70,9 +62,13 @@ export const listCommit = async (
   sinceCommit: string,
   toCommit?: string,
 ): Promise<string[]> => {
+  const newHash = sinceCommit.slice(0, -2);
+
   const { code, stdout, stderr } = await exec(
     `${scriptsRootPath}/list-commits.sh`,
-    [getGitDir(repoName), sinceCommit, toCommit || ''],
+    toCommit
+      ? [getGitDir(repoName), newHash, toCommit]
+      : [getGitDir(repoName), newHash],
   );
 
   stderr && console.error(' stderr ====> ', stderr);

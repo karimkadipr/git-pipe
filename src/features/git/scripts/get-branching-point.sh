@@ -17,9 +17,16 @@ fi
 if [ -z "${devbranch}" ]; then
     echo "No Dev Branch"
 fi
+# git --git-dir=${git_dir:-./.git} fetch origin origin/$devbranch
+# git --git-dir=${git_dir:-./.git} checkout origin/$devbranch
+# git --git-dir=${git_dir:-./.git} config pull.rebase true
+# git --git-dir=${git_dir:-./.git} branch --set-upstream-to=origin/develop develop
+# git --git-dir=${git_dir:-./.git} pull --rebase
+# git --git-dir=${git_dir:-./.git} remote update
 
-git --git-dir=${git_dir:-./.git} checkout -b develop
-git --git-dir=${git_dir:-./.git} config pull.rebase false
-git --git-dir=${git_dir:-./.git} branch --set-upstream-to=origin/develop develop
-git --git-dir=${git_dir:-./.git} fetch
-git --git-dir=${git_dir:-./.git} merge-base develop main
+# git --git-dir=${git_dir:-./.git} branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+# git --git-dir=${git_dir:-./.git} fetch --all
+# git --git-dir=${git_dir:-./.git} pull --all
+git --git-dir=${git_dir:-./.git} merge-base origin/$devbranch $basebranch
+
+exit 0
