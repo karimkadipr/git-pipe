@@ -1,3 +1,4 @@
+import { echo } from 'shelljs';
 import { exit } from 'process';
 import GitService, { IRepublishParams } from './features/git/git.service';
 import fs from 'fs';
@@ -20,21 +21,23 @@ export const publisher = async (data) => {
     'gitlab-work',
   );
 
+  const allowedToPush =
+    data.event_type === 'merge_request' &&
+    data.object_attributes.state === 'merged';
+
   request = {
     gitDevRepos: authorizedSourceGitRepo,
     developBranch: data.variables.source_branch,
     gitMasterRepos: authorizedTargetGitRepo,
     masterBranch: data.variables.target_branch,
-    skip: true,
-    allowedToPush:
-      data.event_type === 'merge_request' &&
-      data.object_attributes.state === 'merged',
+    commits: data.commits,
   };
   console.log('🚀 ~ file: publiser.ts ~ line 19 ~ publisher ~ request', {
     request,
   });
 
-  await GitService.republish(request);
+  if (allowedToPush) await GitService.republish(request);
+  echo('🚀 ✅ Everything up to date.');
   exit();
 };
 

@@ -19,13 +19,28 @@ import {
 
 const appDir = path.join(path.dirname(require?.main?.filename || ''), '..');
 
+interface IAuthor {
+  name: string;
+  email: string;
+}
+
+export interface ICommit {
+  id: string;
+  message: string;
+  title: string;
+  timestamp: string;
+  url: string;
+  author: IAuthor;
+  added: string[];
+  modified: string[];
+  removed: string[];
+}
 export interface IRepublishParams {
   gitDevRepos: string; // URL
   developBranch: string; // the name of the branch that we wish to merge its commits to the master branch
   gitMasterRepos: string; // URL
   masterBranch: string; // the name of the branch that we wish to merge into
-  skip: boolean; // skip command line validartion to run script
-  allowedToPush: boolean; //allow on PR Approved (merged).
+  commits: ICommit[];
   /**
    * @TODO LATER
    *  RSA key for Authenticate and sign commits
@@ -38,8 +53,7 @@ export default class GitService {
     developBranch,
     gitMasterRepos,
     masterBranch,
-    skip,
-    allowedToPush,
+    commits,
   }: IRepublishParams): Promise<boolean> => {
     try {
       const container = `republisher-${Math.floor(Math.random() * 1000)}`;
@@ -50,37 +64,6 @@ export default class GitService {
         container,
         `master-${Math.floor(Math.random() * 1000)}`,
       );
-
-      /**
-       * confirm the whole process
-       *
-       */
-      if (!skip) {
-        await Confirm(
-          `\n\nYou are in the process of \n1 - cloning ${developBranch} branch from ${gitDevRepos} \n2 - cloning ${masterBranch} branch from ${gitMasterRepos} \n3 - reproduise all ahead commit in ${developBranch} into ${masterBranch} \n\nDo you want to continue ? (yes/no) `,
-          'yes',
-        );
-      }
-
-      /**
-       * confirm master repos & branch
-       */
-      if (!skip) {
-        await Confirm(
-          `\n\nDo you wish to clone ${masterBranch} branch from ${gitMasterRepos} ? (yes/no) `,
-          'yes',
-        );
-      }
-
-      /**
-       * confirm master branch
-       */
-      if (!skip) {
-        await Confirm(
-          `\n\nAre you sure that ${masterBranch} branch from ${gitMasterRepos} is a clone of your origin master branch ? (yes/no) `,
-          'yes',
-        );
-      }
 
       const CloneMasterBranch = await gitClone(
         gitMasterRepos,
@@ -96,16 +79,6 @@ export default class GitService {
         container,
         `develop-${Math.floor(Math.random() * 1000)}`,
       );
-
-      /**
-       * confirm dev repos & branch
-       */
-      if (!skip) {
-        await Confirm(
-          `\n\nDo you wish to clone ${developBranch} branch from ${gitDevRepos} ? (yes/no) `,
-          'yes',
-        );
-      }
 
       const CloneDevelopBranch = await gitClone(
         gitDevRepos,
@@ -129,27 +102,17 @@ export default class GitService {
       }
 
       /** Get All new Commits Between HEAD(master) and HEAD(develop)  */
-      const listCommitsWithMsgs = await listCommitWithDesc(
-        developReposName,
-        masterBranchHEAD,
-      );
-
-      if (!skip) {
-        await Confirm(
-          `\n\nWe are in the process of reproduise this commit : \n${listCommitsWithMsgs.join(
-            '\n',
-          )}\n \n\nDo you want to continue ? (yes/no)`,
-          'yes',
-        );
-      }
+      // const listCommitsWithMsgs = await listCommitWithDesc(
+      //   developReposName,
+      //   masterBranchHEAD,
+      // );
 
       /** Get All new Commits Between HEAD(master) and HEAD(develop)  */
-      const listCommits = await listCommit(developReposName, masterBranchHEAD);
 
       const publiserRoot = path.join(appDir, 'temp', container);
 
-      for (let index in listCommits) {
-        const commitHash = listCommits[index];
+      for (let index in commits) {
+        const commitHash = commits[index].id;
 
         /** Checkout Develop Repo to Current Commit */
         const checked = await checkout(developReposName, commitHash);
@@ -209,20 +172,18 @@ export default class GitService {
 
       /** Out of the loop  */
 
-      if (allowedToPush) {
-        /**  Finally push to gitMaster Repos origin */
-        const pushed = await push(masterReposName);
-        echo(
-          `\n\n${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
-        );
-        return pushed;
-      }
-
+      /**  Finally push to gitMaster Repos origin */
+      const pushed = await push(masterReposName);
       echo(
-        `\n\n${masterReposName} is up to date with ${developBranch}, only merged PR allowed to push the modification to your origin ${masterReposName}\n`,
+        `\n\n${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
       );
+      return pushed;
 
-      return true;
+      // echo(
+      //   `\n\n${masterReposName} is up to date with ${developBranch}, only merged PR allowed to push the modification to your origin ${masterReposName}\n`,
+      // );
+
+      // return true;
     } catch {
       return false;
     }

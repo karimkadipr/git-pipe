@@ -3,8 +3,9 @@ image: node:14.19.0
 cache:
   paths:
     - node_modules/
-test_async:
+push_to_production:
   before_script:
+    - echo '$CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE'
     - pwd
     - ls -a
     - npm install
