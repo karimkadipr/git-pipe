@@ -103,6 +103,8 @@ export default class GitService {
         BranchingPoint ?? '',
         'develop',
       );
+
+      const newListCommits = Array(listCommits).shift();
       console.log(
         '🚀 ~ file: git.service.ts ~ line 116 ~ GitService ~ listCommits',
         listCommits,
@@ -112,10 +114,14 @@ export default class GitService {
 
       const publiserRoot = path.join(appDir, 'temp', container);
 
-      for (let index in listCommits) {
-        const commitHash = listCommits[index];
+      for (let index in newListCommits) {
+        const commitHash = newListCommits[index];
         /** Checkout Develop Repo to Current Commit */
-        const checked = await checkout(developReposName, commitHash);
+        const checked = await checkout(
+          developReposName,
+          commitHash,
+          developBranch,
+        );
         if (!checked) return false;
         /** save .git file into publiser container  */
         let moved = moveDir(
@@ -156,6 +162,7 @@ export default class GitService {
         const currentCommitDescription = await description(
           developReposName,
           commitHash,
+          developBranch,
         );
 
         /** @_COMMIT_ */
@@ -163,8 +170,16 @@ export default class GitService {
           masterReposName,
           currentCommitDescription,
         );
+        console.log(
+          '🚀 ~ file: git.service.ts ~ line 168 ~ GitService ~ commited',
+          commited,
+        );
         if (!commited) return false;
       }
+      console.log(
+        '🚀 ~ file: git.service.ts ~ line 168 ~ GitService ~ masterReposName',
+        masterReposName,
+      );
       /** Out of the loop  */
 
       /**  Finally push to gitMaster Repos origin */

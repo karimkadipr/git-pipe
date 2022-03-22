@@ -94,10 +94,11 @@ export const listCommitWithDesc = async (
 export const checkout = async (
   repoName: string,
   commit: string,
+  branch: string,
 ): Promise<boolean> => {
   const { code, stdout, stderr } = await exec(
     `${scriptsRootPath}/checkout.sh`,
-    [getGitDir(repoName), commit],
+    [getGitDir(repoName), commit, branch],
   );
 
   stderr && console.error(' stderr ====> ', stderr);
@@ -110,10 +111,11 @@ export const checkout = async (
 export const description = async (
   repoName: string,
   commit: string,
+  branch: string,
 ): Promise<string> => {
   const { code, stderr, stdout } = await exec(
     `${scriptsRootPath}/commit-show.sh`,
-    [getGitDir(repoName), commit],
+    [getGitDir(repoName), commit, branch],
   );
 
   stderr &&

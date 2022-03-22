@@ -2,6 +2,7 @@
 # arguments
 git_dir=${1}
 commit=${2}
+branch=${3}
 
 
 if [ -z ${git_dir} ]; then
@@ -15,5 +16,10 @@ if [ -z ${commit} ]; then
     exit 1
 fi
 
+if [ -z ${branch} ]; then
+    echo "No branch found"
+    exit 1
+fi
 
+git --git-dir=${git_dir} checkout origin/${branch}
 git --git-dir=${git_dir} show --quiet --pretty=format:"%B" ${commit}
