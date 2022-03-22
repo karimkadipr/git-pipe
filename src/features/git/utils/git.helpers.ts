@@ -42,6 +42,21 @@ export const getHead = async (
   return code === 0 ? stdout : undefined;
 };
 
+export const getBranchingPoint = async (
+  repoName: string,
+  baseBranch: string,
+  developBranch: string,
+): Promise<string | undefined> => {
+  const { code, stdout, stderr } = await exec(
+    `${scriptsRootPath}/get-head.sh`,
+    [getGitDir(repoName), baseBranch, developBranch],
+  );
+
+  stderr && console.error(' stderr ====> ', stderr);
+
+  return code === 0 ? stdout : undefined;
+};
+
 export const listCommit = async (
   repoName: string,
   sinceCommit: string,
