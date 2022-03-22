@@ -18,8 +18,4 @@ if [ -z "${devbranch}" ]; then
     echo "No Dev Branch"
 fi
 
-cd ${git_dir}/..
-
-git checkout ${devbranch}
-
 git --git-dir=${git_dir:-./.git} merge-base ${basebranch} ${devbranch}
