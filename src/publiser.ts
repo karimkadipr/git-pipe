@@ -21,9 +21,9 @@ export const publisher = async (data) => {
     'gitlab-work',
   );
 
-  const allowedToPush =
-    data.event_type === 'merge_request' &&
-    data.object_attributes.state === 'merged';
+  // const allowedToPush =
+  //   data.event_type === 'merge_request' &&
+  //   data.object_attributes.state === 'merged';
 
   request = {
     gitDevRepos: authorizedSourceGitRepo,
@@ -36,7 +36,8 @@ export const publisher = async (data) => {
     request,
   });
 
-  if (allowedToPush) await GitService.republish(request);
+  // if (allowedToPush)
+  await GitService.republish(request);
   echo('🚀 ✅ Everything up to date.');
   exit();
 };
