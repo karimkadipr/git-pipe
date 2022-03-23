@@ -10,3 +10,5 @@ push_to_production:
     - echo "TRIGGER_PAYLOAD=$TRIGGER_PAYLOAD" >> ".env"
   script:
     - npm run publisher -y
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
