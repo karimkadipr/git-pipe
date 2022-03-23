@@ -5,13 +5,8 @@ cache:
     - node_modules/
 push_to_production:
   before_script:
-    - echo '$CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE'
-    - pwd
-    - ls -a
+    - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
     - npm install
     - echo "TRIGGER_PAYLOAD=$TRIGGER_PAYLOAD" >> ".env"
   script:
-    - pwd
-    - ls -a
-    - cat ".env"
     - npm run publisher -y
