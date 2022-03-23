@@ -166,14 +166,12 @@ export default class GitService {
           developBranch,
         );
 
+        const commitDetails = currentCommitDescription.split(',,,,');
         /** @_COMMIT_ */
         const commited = await commit(
           masterReposName,
-          currentCommitDescription,
-        );
-        console.log(
-          '🚀 ~ file: git.service.ts ~ GitService ~ commited',
-          commited,
+          commitDetails[0],
+          commitDetails[1],
         );
         if (!commited) {
           echo('❌ 🚀 Chenages not committed.');

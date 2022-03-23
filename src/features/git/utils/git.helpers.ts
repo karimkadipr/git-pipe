@@ -127,10 +127,12 @@ export const description = async (
 export const commit = async (
   repoName: string,
   msg: string,
+  date: string,
 ): Promise<boolean> => {
   const { code, stderr } = await exec(`${scriptsRootPath}/commit.sh`, [
     getGitDir(repoName),
     `"${msg}"`,
+    `"${date}"`,
   ]);
 
   stderr && console.error(' ##### stderr, stdout ====> ', stderr);

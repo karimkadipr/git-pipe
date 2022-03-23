@@ -21,5 +21,4 @@ if [ -z ${branch} ]; then
     exit 1
 fi
 
-git --git-dir=${git_dir} checkout origin/${branch}
-git --git-dir=${git_dir} show --quiet --pretty=format:"%B" ${commit}
+git --git-dir=${git_dir} show --quiet --pretty=format:"%B,,,,%ai" ${commit}

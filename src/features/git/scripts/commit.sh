@@ -1,6 +1,7 @@
 # arguments
 git_dir=${1}
 description="${2}"
+date="${3}"
 
 # No arguments provided
 if [[ $# -eq 0 ]]; then
@@ -13,10 +14,14 @@ if [ -z "${description}" ]; then
     echo "No description message"
 fi
 
+if [ -z "${date}" ]; then
+    echo "No date"
+fi
+
 cd ${git_dir}/..
 
 git add .
 
-git commit -m "${description}"
+GIT_AUTHOR_DATE=format:iso8601:"${date}" GIT_COMMITTER_DATE=format:iso8601:"${date}" git commit -m "${description}"
 
 # git push
