@@ -104,18 +104,19 @@ export default class GitService {
         'develop',
       );
 
-      const newListCommits = Array(listCommits).shift();
+      listCommits.shift();
+
       console.log(
         '🚀 ~ file: git.service.ts ~ line 116 ~ GitService ~ listCommits',
-        listCommits,
+        { listCommits },
       );
 
       /* Get All new Commits Between HEAD(master) and HEAD(develop)  */
 
       const publiserRoot = path.join(appDir, 'temp', container);
 
-      for (let index in newListCommits) {
-        const commitHash = newListCommits[index];
+      for (let index in listCommits) {
+        const commitHash = listCommits[index];
         /** Checkout Develop Repo to Current Commit */
         const checked = await checkout(
           developReposName,
@@ -171,15 +172,11 @@ export default class GitService {
           currentCommitDescription,
         );
         console.log(
-          '🚀 ~ file: git.service.ts ~ line 168 ~ GitService ~ commited',
+          '🚀 ~ file: git.service.ts ~ GitService ~ commited',
           commited,
         );
         if (!commited) return false;
       }
-      console.log(
-        '🚀 ~ file: git.service.ts ~ line 168 ~ GitService ~ masterReposName',
-        masterReposName,
-      );
       /** Out of the loop  */
 
       /**  Finally push to gitMaster Repos origin */
