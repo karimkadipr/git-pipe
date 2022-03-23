@@ -23,12 +23,13 @@ export const publisher = async (data) => {
 
   const allowedToPush =
     data.event_type === 'merge_request' &&
-    data.object_attributes.state === 'opened';
+    data.object_attributes.state === 'merged';
 
   /**
      *  &&
     data.object_attributes.action === 'approved' &&
-    data.user.username === 'Kitani_Islam'
+    data.user.username === 'Kitani_Islam' 
+    data.object_attributes.state trigger merged opened
      */
   request = {
     gitDevRepos: authorizedSourceGitRepo,
@@ -42,8 +43,9 @@ export const publisher = async (data) => {
     request,
   });
 
-  if (allowedToPush) await GitService.republish(request);
-  echo('🚀 ✅ Everything up to date.');
+  if (allowedToPush) {
+    await GitService.republish(request);
+  } else echo(`❌ 🚀 Not Allowed to run this JOB ${{ request }}`);
   exit();
 };
 

@@ -175,14 +175,16 @@ export default class GitService {
           '🚀 ~ file: git.service.ts ~ GitService ~ commited',
           commited,
         );
-        if (!commited) return false;
+        if (!commited) {
+          echo('❌ 🚀 Chenages not committed.');
+          return false;
+        }
       }
       /** Out of the loop  */
-
       /**  Finally push to gitMaster Repos origin */
       const pushed = await push(masterReposName);
       echo(
-        `\n\n${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
+        `\n\n ✅ 🚀 ${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
       );
       return pushed;
     } catch {
