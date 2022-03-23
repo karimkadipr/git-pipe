@@ -23,12 +23,12 @@ export const publisher = async (data) => {
 
   const allowedToPush =
     data.event_type === 'merge_request' &&
-    data.object_attributes.state === 'opened';
+    data.object_attributes.state === 'opened' &&
+    data.user.username === 'amine.ballalou' &&
+    data.object_attributes.action === 'approved';
 
   /**
      *  &&
-    data.object_attributes.action === 'approved' &&
-    data.user.username === 'Kitani_Islam' 
     data.object_attributes.state trigger merged opened
      */
   request = {
