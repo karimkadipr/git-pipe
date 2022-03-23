@@ -182,11 +182,16 @@ export default class GitService {
       }
       /** Out of the loop  */
       /**  Finally push to gitMaster Repos origin */
-      const pushed = await push(masterReposName);
-      echo(
-        `\n\n ✅ 🚀 ${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
-      );
-      return pushed;
+      if (listCommits.length != 0) {
+        const pushed = await push(masterReposName);
+        echo(
+          `\n\n ✅ 🚀 ${masterReposName} is up to date with ${developBranch}, modification has been pushed to origin ${masterReposName}\n`,
+        );
+        return pushed;
+      } else {
+        echo(`\n\n ❌ 🚀 No Commits To push \n`);
+        return true;
+      }
     } catch {
       return false;
     }

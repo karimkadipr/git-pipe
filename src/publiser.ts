@@ -23,7 +23,7 @@ export const publisher = async (data) => {
 
   const allowedToPush =
     data.event_type === 'merge_request' &&
-    data.object_attributes.state === 'merged';
+    data.object_attributes.state === 'opened';
 
   /**
      *  &&
@@ -34,7 +34,7 @@ export const publisher = async (data) => {
   request = {
     gitDevRepos: authorizedSourceGitRepo,
     developBranch: data.variables.source_branch,
-    developBranchBase: 'main',
+    developBranchBase: data.variables.source_base_branch,
     gitMasterRepos: authorizedTargetGitRepo,
     masterBranch: data.variables.target_branch,
   };
