@@ -101,7 +101,7 @@ export default class GitService {
       const listCommits = await listCommit(
         developReposName,
         BranchingPoint ?? '',
-        'develop',
+        developBranch,
       );
 
       listCommits.shift();
