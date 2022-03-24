@@ -8,7 +8,10 @@ dotenv.config();
 export const publisher = async (data) => {
   let request: IRepublishParams;
 
-  // tmp connect to my account .replace("gitlab.com", "gitlab-work")
+  // tmp: to connect my account .replace("gitlab.com", "gitlab-work")
+  // please use data.project.git_ssh_url & data.variables.target_git_ssh_url
+  // in the request object instead.
+
   const sourceGitRepo = data.project.git_ssh_url;
   const targetGitRepo = data.variables.target_git_ssh_url;
 
@@ -32,11 +35,11 @@ export const publisher = async (data) => {
     data.object_attributes.state trigger merged opened
      */
   request = {
-    gitDevRepos: authorizedSourceGitRepo,
+    gitDevRepos: authorizedSourceGitRepo, // REPLACE THE VALUE WITH: data.project.git_ssh_url
     developBranch: data.variables.source_branch,
     developBranchBase: data.variables.source_base_branch,
-    gitMasterRepos: authorizedTargetGitRepo,
-    masterBranch: data.variables.target_branch,
+    gitMasterRepos: authorizedTargetGitRepo, // target repo ssh_url. / REPLACE THE VALUE WITH: data.variables.target_git_ssh_url
+    masterBranch: data.variables.target_branch, // target branch to push to.
   };
 
   console.log(
