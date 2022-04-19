@@ -64,7 +64,11 @@ export default class GitService {
         `develop-${Math.floor(Math.random() * 1000)}`,
       );
 
-      const CloneDevelopBranch = await gitClone(gitDevRepos, developReposName);
+      const CloneDevelopBranch = await gitClone(
+        gitDevRepos,
+        developReposName,
+        developBranch,
+      );
       if (!CloneDevelopBranch) return false;
 
       /** Get Master HEAD  */
@@ -94,7 +98,7 @@ export default class GitService {
         developBranchBase,
         developBranch,
       );
-      /*  const BranchingPoint = 'e759d156a4882a38dc09bd179b9650b90591722f'; */
+
       console.log(
         '🚀 ~ file: git.service.ts ~ line 96 ~ GitService ~ BranchingPoint',
         BranchingPoint,
