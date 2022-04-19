@@ -24,21 +24,20 @@ export const publisher = async (data) => {
     'gitlab-work',
   );
 
-  const allowedToPush =
-    data.event_type === 'merge_request' &&
-    data.object_attributes.state === 'opened' &&
-    data.user.username === 'amine.ballalou' &&
-    data.object_attributes.action === 'approved';
+  const allowedToPush = data.event_type === 'merge_request'; /* && */
+  // data.object_attributes.state === 'opened' &&
+  // data.user.username === 'amine.ballalou' &&
+  // data.object_attributes.action === 'approved';
 
   /**
      *  &&
     data.object_attributes.state trigger merged opened
      */
   request = {
-    gitDevRepos: authorizedSourceGitRepo, // REPLACE THE VALUE WITH: data.project.git_ssh_url
+    gitDevRepos: sourceGitRepo, // REPLACE THE VALUE WITH: data.project.git_ssh_url
     developBranch: data.variables.source_branch,
     developBranchBase: data.variables.source_base_branch,
-    gitMasterRepos: authorizedTargetGitRepo, // target repo ssh_url. / REPLACE THE VALUE WITH: data.variables.target_git_ssh_url
+    gitMasterRepos: targetGitRepo, // target repo ssh_url. / REPLACE THE VALUE WITH: data.variables.target_git_ssh_url
     masterBranch: data.variables.target_branch, // target branch to push to.
   };
 
@@ -56,11 +55,24 @@ export const publisher = async (data) => {
   exit();
 };
 
-let file = process.env.TRIGGER_PAYLOAD || '';
+/* let file = process.env.TRIGGER_PAYLOAD || '';
 let rawdata = fs.readFileSync(file, {
   encoding: 'utf8',
 });
 
-let webhook_event = JSON.parse(rawdata);
+let webhook_event = JSON.parse(rawdata); */
 
-publisher(webhook_event);
+const web_event = {
+  event_type: 'merge_request',
+  variables: {
+    target_git_ssh_url: 'https://gitlab.com/kadikarimpr/targetrepo',
+    source_branch: 'dev',
+    source_base_branch: 'main',
+    target_branch: 'main',
+  },
+  project: {
+    git_ssh_url: 'https://gitlab.com/kadikarimpr/sourcerepo.git',
+  },
+};
+
+publisher(web_event);
