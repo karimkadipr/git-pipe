@@ -88,11 +88,13 @@ export default class GitService {
         console.info(' Everything up-to-date  ');
         return true;
       }
+
       const BranchingPoint = await getBranchingPoint(
         developReposName,
         developBranchBase,
         developBranch,
       );
+      /*  const BranchingPoint = 'e759d156a4882a38dc09bd179b9650b90591722f'; */
       console.log(
         '🚀 ~ file: git.service.ts ~ line 96 ~ GitService ~ BranchingPoint',
         BranchingPoint,

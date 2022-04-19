@@ -25,7 +25,7 @@ export const gitClone = async (
 };
 
 export const getGitDir = (repoName: string): string => {
-  return path.join(appDir, '..', repoName, '.git');
+  return path.join(appDir, '..', repoName, '.git').split('\\').join('/');
 };
 
 export const getHead = async (
@@ -33,7 +33,8 @@ export const getHead = async (
   branchName?: string,
 ): Promise<string | undefined> => {
   const { code, stdout, stderr } = await exec(
-    `${scriptsRootPath}/get-head.sh`,
+    `git --git-dir=${getGitDir(repoName)} rev-parse HEAD`,
+    /* ${scriptsRootPath}/get-head.sh */
     branchName ? [getGitDir(repoName), branchName] : [getGitDir(repoName)],
   );
 
