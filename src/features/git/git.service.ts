@@ -5,7 +5,6 @@ import {
   moveDir,
   overwriteFolderContent,
 } from '../../utils/fileManager';
-import { Confirm } from '../../utils/shelljs';
 import {
   getHead,
   gitClone,
@@ -15,7 +14,6 @@ import {
   commit,
   push,
   description,
-  listCommitWithDesc,
 } from './utils/git.helpers';
 
 const appDir = path.join(path.dirname(require?.main?.filename || ''), '..');
@@ -91,15 +89,18 @@ export default class GitService {
         return true;
       }
 
+      const masterBranchHeadHash = masterBranchHEAD.replace(/\n/g, '');
+      const developBranchHeadHash = developBranchHEAD.replace(/\n/g, '');
+
       const masterLastCommit = await description(
         masterReposName,
-        masterBranchHEAD.replace(/\n/g, ''),
+        masterBranchHeadHash,
         masterBranch,
       );
 
       const developLastCommit = await description(
         developReposName,
-        developBranchHEAD.replace(/\n/g, ''),
+        developBranchHeadHash,
         developBranch,
       );
 
@@ -125,7 +126,7 @@ export default class GitService {
         BranchingPoint,
       );
 
-      const listCommits = await listCommit(
+      let listCommits = await listCommit(
         developReposName,
         BranchingPoint ?? '',
         developBranchHEAD,
@@ -192,15 +193,18 @@ export default class GitService {
         );
 
         const commitDetails = currentCommitDescription.split(',,,,');
+
         /** @_COMMIT_ */
-        const commited = await commit(
-          masterReposName,
-          commitDetails[0],
-          commitDetails[1],
-        );
-        if (!commited) {
-          echo('❌ 🚀 Chenages not committed.');
-          return false;
+        if (masterLastCommitDetails[1] < commitDetails[1]) {
+          const commited = await commit(
+            masterReposName,
+            commitDetails[0],
+            commitDetails[1],
+          );
+          if (!commited) {
+            echo('❌ 🚀 Chenages not committed.');
+            return false;
+          }
         }
       }
       /** Out of the loop  */
