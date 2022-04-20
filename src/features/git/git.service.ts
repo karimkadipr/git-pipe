@@ -64,15 +64,11 @@ export default class GitService {
         `develop-${Math.floor(Math.random() * 1000)}`,
       );
 
-      const CloneDevelopBranch = await gitClone(
-        gitDevRepos,
-        developReposName,
-        developBranch,
-      );
+      const CloneDevelopBranch = await gitClone(gitDevRepos, developReposName);
       if (!CloneDevelopBranch) return false;
 
       /** Get Master HEAD  */
-      const masterBranchHEAD = await getHead(masterReposName);
+      const masterBranchHEAD = await getHead(masterReposName, masterBranch);
       console.log(
         '🚀 ~ file: git.service.ts ~ line 72 ~ GitService ~ masterBranchHEAD',
         masterBranchHEAD,
@@ -80,16 +76,41 @@ export default class GitService {
       if (!masterBranchHEAD) return false;
 
       /** Get Develop HEAD  */
-      const developBranchHEAD = await getHead(developReposName);
+      const developBranchHEAD = await getHead(developReposName, developBranch);
+
       console.log(
         '🚀 ~ file: git.service.ts ~ line 76 ~ GitService ~ developBranchHEAD',
         developBranchHEAD,
       );
+
       if (!developBranchHEAD) return false;
 
       /** No commits to be republished  */
       if (masterBranchHEAD === developBranchHEAD) {
         console.info(' Everything up-to-date  ');
+        return true;
+      }
+
+      const masterLastCommit = await description(
+        masterReposName,
+        masterBranchHEAD.replace(/\n/g, ''),
+        masterBranch,
+      );
+
+      const developLastCommit = await description(
+        developReposName,
+        developBranchHEAD.replace(/\n/g, ''),
+        developBranch,
+      );
+
+      const masterLastCommitDetails = masterLastCommit.split(',,,,');
+      const developLastCommitDetails = developLastCommit.split(',,,,');
+
+      if (
+        masterLastCommitDetails[0] === developLastCommitDetails[0] &&
+        masterLastCommitDetails[1] === developLastCommitDetails[1]
+      ) {
+        console.info(' Everything up-to-date ');
         return true;
       }
 
@@ -107,10 +128,8 @@ export default class GitService {
       const listCommits = await listCommit(
         developReposName,
         BranchingPoint ?? '',
-        developBranch,
+        developBranchHEAD,
       );
-
-      listCommits.shift();
 
       console.log(
         '🚀 ~ file: git.service.ts ~ line 116 ~ GitService ~ listCommits',
